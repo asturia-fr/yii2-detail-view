@@ -1,14 +1,20 @@
 Change Log: `yii2-detail-view`
 ==============================
 
-## Version 1.7.5 (under development)
+## Version 1.7.5
 
-**Date:** 05-Feb-2016
+**Date:** 23-Apr-2016
 
+- (enh #88): Implement Krajee Dialog for prettier and better alerts and confirmation dialog.
+- (enh #95): Enhance alert messaging session keys to be specific to each detail view.
 - (enh #104): Use more correct `StarRating` repo.
 - (enh #106): Enhance model `hasErrors` check.
 - (enh #107): Remove redundant code.
+- (enh #108): Update extension documentation for new properties.
 - Add composer branch alias to allow getting latest `dev-master` updates.
+- (enh #112): Adjust required version of yii2-helpers to 1.3.5.
+- (enh #113): Add Thai translations.
+- (enh #116): Ability to use `form` instance and custom markup in edit mode.
 
 ## Version 1.7.4
 
