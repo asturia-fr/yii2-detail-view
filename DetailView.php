@@ -104,7 +104,7 @@ class DetailView extends \yii\widgets\DetailView
     const INPUT_CHECKBOX_X = '\kartik\checkbox\CheckboxX';
 
     // inputs list
-    private static $_inputsList = [
+    protected static $_inputsList = [
         self::INPUT_HIDDEN => 'hiddenInput',
         self::INPUT_TEXT => 'textInput',
         self::INPUT_PASSWORD => 'passwordInput',
@@ -121,7 +121,7 @@ class DetailView extends \yii\widgets\DetailView
     ];
 
     // dropdown inputs
-    private static $_dropDownInputs = [
+    protected static $_dropDownInputs = [
         self::INPUT_LIST_BOX => 'listBox',
         self::INPUT_DROPDOWN_LIST => 'dropDownList',
         self::INPUT_CHECKBOX_LIST => 'checkboxList',
@@ -555,16 +555,20 @@ class DetailView extends \yii\widgets\DetailView
      */
     protected function initWidget()
     {
-        /**
-         * @var ActiveForm $formClass
-         */
-        $formClass = $this->formClass;
         if ($this->enableEditMode) {
+            /**
+             * @var ActiveForm $formClass
+             */
+            $formClass = $this->formClass;
             $activeForm = ActiveForm::classname();
             if (!is_subclass_of($formClass, $activeForm) && $formClass !== $activeForm) {
                 throw new InvalidConfigException("Form class '{$formClass}' must exist and extend from '{$activeForm}'.");
             }
             $this->validateDisplay();
+            if (!isset($this->formOptions['fieldConfig']['template'])) {
+                $this->formOptions['fieldConfig']['template'] = "{input}\n{hint}\n{error}";
+            }
+            $this->_form = $formClass::begin($this->formOptions);
         }
         if ($this->bootstrap) {
             Html::addCssClass($this->options, 'table');
@@ -592,18 +596,10 @@ class DetailView extends \yii\widgets\DetailView
      */
     protected function runWidget()
     {
-        /**
-         * @var ActiveForm $formClass
-         */
-        $formClass = $this->formClass;
         if (empty($this->container['id'])) {
             $this->container['id'] = $this->getId();
         }
         $this->initI18N(__DIR__);
-        if ($this->enableEditMode) {
-            $this->formOptions['fieldConfig']['template'] = "{input}\n{hint}\n{error}";
-            $this->_form = $formClass::begin($this->formOptions);
-        }
         Html::addCssClass($this->alertContainerOptions, 'panel-body kv-alert-container');
         $this->alertMessageSettings += [
             'kv-detail-error' => 'alert alert-danger',
@@ -628,8 +624,13 @@ class DetailView extends \yii\widgets\DetailView
         }
         echo str_replace('{buttons}', Html::tag('div', $buttons, $this->buttonContainer), $output);
         if ($this->enableEditMode) {
+            /**
+             * @var ActiveForm $formClass
+             */
+            $formClass = $this->formClass;
             $formClass::end();
         }
+        
     }
 
     /**
